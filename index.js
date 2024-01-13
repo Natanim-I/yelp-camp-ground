@@ -2,6 +2,7 @@ const express = require("express")
 const path = require("path")
 const mongoose = require("mongoose")
 const methodOverride = require("method-override")
+const ejsMate = require("ejs-mate")
 const Campground = require("./models/campground.js")
 const PORT = 3000
 
@@ -14,10 +15,12 @@ db.once("open", () => {
 
 const app = express()
 
+app.engine("ejs", ejsMate)
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
 app.use(express.urlencoded({extended: true}))
+app.use(express.json())
 app.use(methodOverride("_method"))
 
 app.get("/", (req, res) => {
@@ -44,6 +47,7 @@ app.post("/campgrounds", async (req, res) => {
         title: title,
         location: location
     })
+    console.log(campground)
     await campground.save()
     res.redirect(`/campgrounds/${campground._id}`)
 })
