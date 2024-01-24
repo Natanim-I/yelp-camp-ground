@@ -3,25 +3,14 @@ const router = express.Router({ mergeParams: true})
 const Campground = require("../models/campground")
 const Review = require("../models/reviews")
 const catchAsync = require("../utils/wrapasync")
-const ExpressError = require("../utils/expresserror")
-const { reviewSchema } = require("../schemas")
-const { isLoggedIn } = require("../middlewares")
-
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body)
-    if(error){
-        const errorMsg = error.details.map(el => el.message).join(",")
-        throw new ExpressError(errorMsg, 400)
-    } else{
-        next()
-    }
-}
+const { isLoggedIn, validateReview } = require("../middlewares")
 
 router.post("/", isLoggedIn, validateReview, catchAsync(async (req, res) => {
     const {id} = req.params
     const campground = await Campground.findById(id)
     const review = new Review(req.body.review)
     campground.reviews.push(review)
+    review.author = req.user._id
     await review.save()
     await campground.save()
     req.flash("success", "Created new review!")
