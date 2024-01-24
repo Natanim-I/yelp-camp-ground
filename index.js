@@ -5,10 +5,14 @@ const methodOverride = require("method-override")
 const ejsMate = require("ejs-mate")
 const session = require("express-session")
 const flash = require("connect-flash")
+const passport = require("passport")
+const localStrategy = require("passport-local")
 const ExpressError = require("./utils/expresserror.js")
 const campgroundRouter = require("./routes/campgrounds.js")
 const reviewRouter = require("./routes/reviews.js")
+const authRouter = require("./routes/auth.js")
 const PORT = 3000
+const User = require("./models/user.js")
 
 mongoose.connect("mongodb://localhost:27017/yelp")
 const db = mongoose.connection
@@ -42,12 +46,20 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 app.use(flash())
 
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new localStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
 app.use((req, res, next) => {
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
+    res.locals.currentUser = req.user
     next()
 })
 
+app.use("/", authRouter)
 app.use("/campgrounds", campgroundRouter)
 app.use("/campgrounds/:id/reviews", reviewRouter)
 

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const Campground = require("../models/campground.js")
+const User = require("../models/user.js")
 const cities = require("./cities.js")
 const { descriptors, places } = require("./seedHelpers.js")
 
@@ -14,6 +15,7 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)]
 
 const seedDB = async () => {
     await Campground.deleteMany({})
+    await User.deleteMany({})
     for(let i = 0; i < 30; i++){
         const random1000 = Math.floor(Math.random() * 1000)
         const price = Math.floor(Math.random() * 1000) + 100
