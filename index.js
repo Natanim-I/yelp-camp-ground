@@ -1,6 +1,9 @@
+if(process.env.NODE_ENV !== "production"){
+    require("dotenv").config()
+}
+
 const express = require("express")
 const path = require("path")
-const mongoose = require("mongoose")
 const methodOverride = require("method-override")
 const ejsMate = require("ejs-mate")
 const session = require("express-session")
@@ -11,15 +14,8 @@ const ExpressError = require("./utils/expresserror.js")
 const campgroundRouter = require("./routes/campgrounds.js")
 const reviewRouter = require("./routes/reviews.js")
 const authRouter = require("./routes/auth.js")
-const PORT = 3000
 const User = require("./models/user.js")
-
-mongoose.connect("mongodb://localhost:27017/yelp")
-const db = mongoose.connection
-db.on("error", console.error.bind(console, "connection error!"))
-db.once("open", () => {
-    console.log("Database Connected!")
-})
+const dbconfig = require("./configuration/dbconfig.js")
 
 const app = express()
 
@@ -77,6 +73,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render("error", { err })
 })
 
-app.listen(PORT, () => {
-    console.log(`Server started listening on port: ${PORT}`)
+app.listen(process.env.PORT, () => {
+    console.log(`Server started listening on port: ${process.env.PORT}`)
 })
