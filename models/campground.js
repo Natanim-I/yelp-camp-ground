@@ -1,7 +1,6 @@
 const mongoose = require ("mongoose")
 const Schema = mongoose.Schema
 const Review = require("./reviews")
-const { campgroundSchema } = require("../schemas")
 
 const CampgroundSchema = new Schema({
     title: String,
