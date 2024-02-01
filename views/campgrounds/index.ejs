@@ -4,7 +4,11 @@
             <div class="card mb-3">
                 <div class="row">
                     <div class="col-md-4">
-                        <img class="img-fluid" src="<%= campground.images[0].url %>" alt="Campground Image">
+                        <% if(campground.images.length) { %>
+                            <img class="img-fluid" src="<%= campground.images[0].url %>" alt="Campground Image">
+                        <% } else { %>
+                            <img class="img-fluid" src="https://console.cloudinary.com/console/c-61cf69779927e4c86b5a60abd11d5b/media_library/folders/home?view_mode=mosaic" alt="Campground Image">
+                        <% } %>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
