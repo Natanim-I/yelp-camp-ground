@@ -14,7 +14,7 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)]
 
 const seedDB = async () => {
     await Campground.deleteMany({})
-    for(let i = 0; i < 30; i++){
+    for(let i = 0; i < 300; i++){
         const random1000 = Math.floor(Math.random() * 1000)
         const price = Math.floor(Math.random() * 1000) + 100
         const description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ab in blanditiis dignissimos omnis! Vel maxime totam iste nesciunt voluptatem hic et nemo distinctio, temporibus porro numquam dignissimos dolor alias!"

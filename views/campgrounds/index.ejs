@@ -26,5 +26,6 @@
 <% } %>
 <script>
     mpxToken = "<%- process.env.MAPBOX_TOKEN %>"
+    campgrounds = {features: <%- JSON.stringify(campgrounds) %>}
 </script>
 <script src="/js/clusterMap.js"></script>
