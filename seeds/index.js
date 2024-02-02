@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
 const Campground = require("../models/campground.js")
-const User = require("../models/user.js")
 const cities = require("./cities.js")
 const { descriptors, places } = require("./seedHelpers.js")
 
@@ -26,7 +25,10 @@ const seedDB = async () => {
             price: price,
             geometry: {
               type: "Point",
-              coordinates: [-113.1331, 47.0202]
+              coordinates: [
+                cities[random1000].longitude,
+                cities[random1000].latitude
+              ]
             },
             description: description,
             images: [

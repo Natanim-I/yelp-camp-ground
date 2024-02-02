@@ -4,7 +4,7 @@ const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v12',
   center: campground.geometry.coordinates, 
-  zoom: 7, 
+  zoom: 10, 
 });
 
 new mapboxgl.Marker()

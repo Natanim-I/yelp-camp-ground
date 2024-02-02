@@ -1,25 +1,30 @@
 <% layout("layout/boilerplate") %>
-    <h1>All Campgrounds</h1>
-        <% for(campground of campgrounds){ %>
-            <div class="card mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <% if(campground.images.length) { %>
-                            <img class="img-fluid" src="<%= campground.images[0].url %>" alt="Campground Image">
-                        <% } else { %>
-                            <img class="img-fluid" src="https://console.cloudinary.com/console/c-61cf69779927e4c86b5a60abd11d5b/media_library/folders/home?view_mode=mosaic" alt="Campground Image">
-                        <% } %>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title"><%= campground.title %></h5>
-                            <p class="card-text"><%= campground.description %></p>
-                            <p class="card-text"><small class="text-muted"><%= campground.location %></small></p>
-                            <h5 class="card-text">Price: $<%= campground.price %></h5>
-                            <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">View <%= campground.title %></a>
-                        </div>
-                    </div>
+<div id="map" style="width: 100%; height: 300px; margin-bottom: 10px; margin-top: 0;"></div>
+<h1 id="all-campground-title">Search and View Our Campgrounds</h1>
+
+<% for(campground of campgrounds){ %>
+    <div class="card mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <% if(campground.images.length) { %>
+                    <img class="img-fluid" src="<%= campground.images[0].url %>" alt="Campground Image">
+                <% } else { %>
+                    <img class="img-fluid" src="https://console.cloudinary.com/console/c-61cf69779927e4c86b5a60abd11d5b/media_library/folders/home?view_mode=mosaic" alt="Campground Image">
+                <% } %>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><%= campground.title %></h5>
+                    <p class="card-text"><%= campground.description %></p>
+                    <p class="card-text"><small class="text-muted"><%= campground.location %></small></p>
+                    <h5 class="card-text">Price: $<%= campground.price %></h5>
+                    <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">View <%= campground.title %></a>
                 </div>
             </div>
-        <% } %>
-
+        </div>
+    </div>
+<% } %>
+<script>
+    mpxToken = "<%- process.env.MAPBOX_TOKEN %>"
+</script>
+<script src="/js/clusterMap.js"></script>

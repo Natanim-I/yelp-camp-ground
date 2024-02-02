@@ -17,3 +17,8 @@
     width: 400px;
     height: 400px;
 }
+
+#all-campground-title{
+    text-align: center;
+    font-weight: 700;
+}
