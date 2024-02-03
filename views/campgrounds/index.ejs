@@ -1,31 +1,72 @@
 <% layout("layout/boilerplate") %>
 <div id="map" style="width: 100%; height: 300px; margin-bottom: 10px; margin-top: 0;"></div>
 <h1 id="all-campground-title">Search and View Our Campgrounds</h1>
-
-<% for(campground of campgrounds){ %>
-    <div class="card mb-3">
-        <div class="row">
-            <div class="col-md-4">
-                <% if(campground.images.length) { %>
-                    <img class="img-fluid" src="<%= campground.images[0].url %>" alt="Campground Image">
-                <% } else { %>
-                    <img class="img-fluid" src="https://console.cloudinary.com/console/c-61cf69779927e4c86b5a60abd11d5b/media_library/folders/home?view_mode=mosaic" alt="Campground Image">
-                <% } %>
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title"><%= campground.title %></h5>
-                    <p class="card-text"><%= campground.description %></p>
-                    <p class="card-text"><small class="text-muted"><%= campground.location %></small></p>
-                    <h5 class="card-text">Price: $<%= campground.price %></h5>
-                    <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">View <%= campground.title %></a>
-                </div>
-            </div>
-        </div>
-    </div>
-<% } %>
 <script>
     mpxToken = "<%- process.env.MAPBOX_TOKEN %>"
     campgrounds = {features: <%- JSON.stringify(campgrounds) %>}
 </script>
 <script src="/js/clusterMap.js"></script>
+<script>
+    function appendCampground(start, end){
+        const content = document.getElementById("main")
+        for(let i=start; i < end; i++){
+            const container = document.createElement("div")
+            container.classList.add("card", "mb-3")
+            const row = document.createElement("div")
+            row.classList.add("row")
+            const imgDiv = document.createElement("div")
+            imgDiv.classList.add("col-md-4")
+            const img = document.createElement("img")
+            img.classList.add("img-fluid")
+            img.src =  campgrounds.features[i].images[0].url
+            img.alt = "Campground Image"
+            const bodyDiv = document.createElement("div")
+            bodyDiv.classList.add("col-md-8")
+            const body = document.createElement("div")
+            body.classList.add("card-body")
+            const title = document.createElement("h5")
+            title.classList.add("card-title")
+            title.textContent = campgrounds.features[i].title
+            const description = document.createElement("p")
+            description.classList.add("card-text")
+            description.textContent = campgrounds.features[i].description
+            const location = document.createElement("p")
+            location.classList.add("card-text")
+            const small = document.createElement("small")
+            small.classList.add("text-muted")
+            small.textContent = campgrounds.features[i].location
+            const price = document.createElement("h5")
+            price.classList.add("card-text")
+            price.textContent = `Price: $${campgrounds.features[i].price}`
+            const view = document.createElement("a")
+            view.classList.add("btn", "btn-primary")
+            view.textContent = `View ${campgrounds.features[i].title}`
+            view.href = `/campgrounds/${campgrounds.features[i]._id}`
+            imgDiv.appendChild(img)
+            location.appendChild(small)
+            body.append(title, description, location, price, view)
+            bodyDiv.appendChild(body)
+            row.appendChild(imgDiv)
+            row.appendChild(bodyDiv)
+            container.appendChild(row)
+            content.appendChild(container)
+        }
+    }
+    const itemsPerLoad = 10;
+    let loadedItem = 0;
+
+    appendCampground(loadedItem, loadedItem + itemsPerLoad)
+    loadedItem += itemsPerLoad
+    window.addEventListener('scroll', () => {
+        const scrollPosition = window.scrollY + window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        if (scrollPosition >= documentHeight - 100) {
+            
+            if (loadedItem < campgrounds.features.length) {
+                const end = loadedItem + itemsPerLoad;
+                appendCampground(loadedItem, end);
+                loadedItem = end;
+            }
+        }
+    });
+</script>
