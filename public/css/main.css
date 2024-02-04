@@ -1,3 +1,11 @@
+
+.camp{
+    border-radius: 10px;
+}
+
+.camp-img{
+    border-radius: 10px;
+}
 .thumbnail {
     width: 200px;
     height: 150px;
@@ -21,6 +29,14 @@
 #all-campground-title{
     text-align: center;
     font-weight: 700;
+}
+
+.search{
+    justify-content: center;
+}
+
+#search{
+    width: 40%;
 }
 
 .footer{

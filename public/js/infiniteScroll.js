@@ -2,13 +2,13 @@ function appendCampground(start, end){
     const content = document.getElementById("main")
     for(let i=start; i < end; i++){
         const container = document.createElement("div")
-        container.classList.add("card", "mb-3")
+        container.classList.add("card", "mb-3", "camp")
         const row = document.createElement("div")
         row.classList.add("row")
         const imgDiv = document.createElement("div")
         imgDiv.classList.add("col-md-4")
         const img = document.createElement("img")
-        img.classList.add("img-fluid")
+        img.classList.add("img-fluid", "camp-img")
         img.src =  campgrounds.features[i].images[0].url
         img.alt = "Campground Image"
         const bodyDiv = document.createElement("div")
@@ -46,8 +46,17 @@ function appendCampground(start, end){
 const itemsPerLoad = 10;
 let loadedItem = 0;
 
-appendCampground(loadedItem, loadedItem + itemsPerLoad)
-loadedItem += itemsPerLoad
+if(campgrounds.features.length){
+    appendCampground(loadedItem, loadedItem + itemsPerLoad)
+    loadedItem += itemsPerLoad
+} else {
+    const content = document.getElementById("main")
+    const result = document.createElement("h3")
+    result.textContent = "No Campgrounds Found!"
+    result.style.textAlign = "center"
+    content.appendChild(result)
+
+}
 window.addEventListener('scroll', () => {
     const scrollPosition = window.scrollY + window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;

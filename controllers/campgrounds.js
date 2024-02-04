@@ -41,6 +41,12 @@ module.exports.showCampground = async (req, res) => {
     res.render("campgrounds/show", {campground}) 
 }
 
+module.exports.searchCampgrounds = async (req, res) => {
+    const { search } = req.body
+    const campgrounds = await Campground.find({title: search})
+    res.render("campgrounds/index", {campgrounds})
+}
+
 module.exports.editCamp = async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     if(!campground){

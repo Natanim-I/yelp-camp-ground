@@ -4,7 +4,7 @@ const catchAsync = require("../utils/wrapasync")
 const passport = require("passport")
 const users = require("../controllers/auth")
 
-router.report("/register")
+router.route("/register")
     .get(users.register)
     .post(catchAsync(users.registerUser))
     
