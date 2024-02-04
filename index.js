@@ -7,7 +7,10 @@ const path = require("path")
 const methodOverride = require("method-override")
 const ejsMate = require("ejs-mate")
 const session = require("express-session")
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash")
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require("helmet")
 const passport = require("passport")
 const localStrategy = require("passport-local")
 const ExpressError = require("./utils/expresserror.js")
@@ -27,17 +30,72 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(methodOverride("_method"))
 app.use(express.static(path.join(__dirname, "public")))
+app.use(mongoSanitize())
 
+const store = MongoStore.create({ 
+    mongoUrl: 'mongodb://localhost:27017/yelp',
+    secret: "YelpCampgroundSecret",
+    touchAfter: 24 * 3600
+})
 const sessionConfig = {
+    store,
+    name: "session",
     secret: "YelpCampgroundSecret",
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        //secure: true,
         expres: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+];
+const styleSrcUrls = [
+    "https://cdn.jsdelivr.net",
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+];
+const connectSrcUrls = [
+    "https://api.mapbox.com/",
+    "https://a.tiles.mapbox.com/",
+    "https://b.tiles.mapbox.com/",
+    "https://events.mapbox.com/",
+];
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/diornu3yv/",  
+                "https://images.unsplash.com/",
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
+
 
 app.use(session(sessionConfig))
 app.use(flash())

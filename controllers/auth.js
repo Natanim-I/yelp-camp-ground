@@ -4,7 +4,7 @@ module.exports.register = (req, res) => {
     res.render("users/register")
 }
 
-module.registerUser = async (req, res) => {
+module.exports.registerUser = async (req, res) => {
     try{
         const { username, email, password } = req.body
         const user = new User({ username, email})
